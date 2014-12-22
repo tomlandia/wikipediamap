@@ -1,0 +1,76 @@
+/*Header*/
+.header {
+  height: 6% !important;
+}
+#search-input {
+  text-align: center !important;
+  width: 80%;
+}
+.autocomplete-suggestions {
+  position: fixed !important;
+  text-align: center;
+  background-color: white;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+.autocomplete-suggestion {
+  border-bottom: 1px solid #ccc;
+}
+/*Map*/
+#map {
+  height: 94%;
+  width: 45%;
+  float:left;
+}
+.point {
+  border-radius: 50%;
+  width: 3px;
+  height: 3px;
+  background-color: rgba(0,0,240,0.4);
+  border: 1px solid blue;
+}
+/*Wikipedia*/
+#content-wrapper {
+  height: 94%;
+  width: 55%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  float:right;
+  padding-top: 0 2% !important;
+}
+.infobox {
+  max-width: 40% !important;
+  width: 40% !important;
+  margin: 0 !important;
+}
+
+/*loading gear inspired by http://codepen.io/bienfantaisie/pen/jmgvF */
+#loading-gear {
+  z-index: 100000;
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:45px;
+  height:45px;
+  margin:-22px 0 0 -23px;
+  border-width: 8px;
+  border-style:solid;
+  border-color:#000 #000 rgba(0,0,0,.5) rgba(0,0,0,.5);
+  opacity:1;
+  border-radius:30px;
+  -webkit-animation:rotate 1s linear infinite;
+  -ms-animation:rotate 1s linear infinite;
+  animation:rotate 1s linear infinite;
+}
+@-webkit-keyframes rotate{
+  0%{-webkit-transform:rotate(0deg)}
+  100%{-webkit-transform:rotate(360deg)}
+}
+@-ms-keyframes rotate{
+  0%{-ms-transform:rotate(0deg)}
+  100%{-ms-transform:rotate(360deg)}
+}
+@keyframes rotate{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}

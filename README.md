@@ -8,4 +8,3 @@ TODO:
 - Find other sources such as a geolocation services towns, counties and provinces
 - Maybe show two layers at a time?
 - Actual multilingual support
-- Add a splash screen and use MessagePack/Protobuf if worth it on slow connections

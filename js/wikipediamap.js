@@ -47,8 +47,13 @@ $.each(window.location.search.substring(1).split('&'), function(_, keyval) {
     keyval = keyval.split('=');
     urlParameters[keyval[0]] = keyval[1];
 });
-urlParameters.title = urlParameters.title || 'Paris'
+console.log(urlParameters.title)
+if(urlParameters.title)
+    urlParameters.title = decodeURIComponent(urlParameters.title).replace(/\+/g, '_');
+else
+    urlParameters.title = 'Paris'
 urlParameters.language = urlParameters.language || 'en'
+$('option[value="' + urlParameters.language + '"]').attr('selected', 'true');
 
 
 //##LOAD DATA
@@ -65,6 +70,9 @@ $.getJSON('data/' + urlParameters.language + '.json', function(data) {
             rTreeItems.push([points[i][1], points[i][0], points[i][1], points[i][0], points[i][2]]);
         return new RTreeMarkerLayer(icon, onClicked).bulkInsert(rTreeItems).addTo(map);
     });
+
+    $('#loading-gear').remove();
+    map.panBy([1,1]); //map.trigger('moveend');
 });
 
 map.on('zoomend', function() {
@@ -141,7 +149,7 @@ $('#search-form').submit(function(event) {
 });
 
 
-loadArticle('Paris');
+loadArticle(urlParameters.title);
 
 
 /*
