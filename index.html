@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Wikipedia Map</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes, minimum-scale=0.25, maximum-scale=5.0, width=device-width">
+    <link rel="apple-touch-icon" href="http://bits.wikimedia.org/apple-touch/wikipedia.png">
+    <link rel="shortcut icon" href="http://bits.wikimedia.org/favicon/wikipedia.ico">
+    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/wikipedia.css"> <!-- Horribly Ctrl+S'd -->
+    <style>
+    .header {
+      height: 6% !important;
+    }
+    #search-input {
+      text-align: center !important;
+      width: 80%;
+    }
+    .autocomplete-suggestions {
+      position: fixed !important;
+      text-align: center;
+      background-color: white;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+    }
+    .autocomplete-suggestion {
+      border-bottom: 1px solid #ccc;
+    }
+    #map {
+      height: 94%;
+      width: 45%;
+      float:left;
+    }
+    .point {
+      border-radius: 50%;
+      width: 3px;
+      height: 3px;
+      background-color: rgba(0,0,240,0.4);
+      border: 1px solid blue;
+    }
+    #content-wrapper {
+      height: 94%;
+      width: 55%;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      float:right;
+      padding-top: 0 2% !important;
+    }
+    .infobox {
+      max-width: 40% !important;
+      width: 40% !important;
+      margin: 0 !important;
+    }
+    </style>
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.auto-complete.min.js"></script>
+    <script src="js/leaflet.js"></script>
+  </head>
+
+
+  <body class="mediawiki ltr sitedir-ltr stable mw-mobile-mode skin-minerva action-view">
+    <div class="header">
+      <form id="search-form" class="search-box">
+        <select id="language-selection">
+          <option value="en">English</option> 
+          <option value="de">Deutsch</option> 
+          <option value="fr">Français</option> 
+          <option value="es">Español</option> 
+          <option value="ja">日本語</option> 
+          <option value="zh">中文</option> 
+        </select>
+        <input placeholder="Search Wikipedia" id="search-input" class="search" type="search">
+        <input name="fulltext" value="Search" title="Search Wikipedia for this text" class="fulltext-search no-js-only icon icon-search" type="submit">
+      </form>
+    </div>
+
+    <div id="map"></div>
+    <div id="content-wrapper" class="content"></div>
+
+    <script src="js/rbush.js"></script>
+    <script src="js/wikipediamap.js"></script>
+  </body>
+</html>
