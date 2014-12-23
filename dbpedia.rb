@@ -2,13 +2,14 @@ require 'open-uri'
 require 'json'
 
 def title(url)
-    URI.unescape(url[28..-1])
+    puts url
+    URI.unescape(url.split('/').last).gsub('+', '_')
 end
 
 def download_archive(language='en')
     points = {}
     %x(
-    curl http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/#{language}/geo_coordinates_#{language}.nt.bz2 |
+    curl http://data.dws.informatik.uni-mannheim.de/dbpedia/2014/#{language}/geo_coordinates_#{language}.ttl.bz2 |
     bunzip2 |
     tail -n +2 |
     grep '<http://www.georss.org/georss/point>' |
@@ -21,7 +22,8 @@ def download_archive(language='en')
     points
 end
 
-def query(min_pop, min_area, language_prefix='')
+def query(min_pop, min_area, language='en')
+    language_prefix = (language == 'en' ? '' : "#{language}.")
     base_url = "http://#{language_prefix}dbpedia.org/sparql?default-graph-uri=&format=text%2Fcsv&timeout=30000&query="
     #using subqueries to bypass endpoint's MaxSortedTopRow limit:
     #http://stackoverflow.com/questions/20937556/how-to-get-all-companies-from-dbpedia
@@ -43,7 +45,8 @@ SPARQL
         url = base_url + URI.escape(query)
 
         old_size = results.size
-        results += %x(curl '#{url}' | tail -n +2 | tr -d '"').lines
+        results += %x(curl '#{url}' | tail -n +2 | tr -d '"').encode("UTF-8").lines
+        print results
         break if old_size == results.size #just in case the result count is modulo 10000!
 
         offset += 10_000
@@ -51,35 +54,36 @@ SPARQL
     results.map { |r| title(r.chomp) }
 end
 
-puts "FETCHING DBPEDIA DUMP"
-points = download_archive()
-puts "QUERYING SPARQL ENDPOINT"
-world, continent, state = [[1_000_000, 30_000 * 10*7],
-                           [50_000, 10_000 * 10**7],
-                           [1_000, 10**9]].map do |min_pop, min_area|
-    query(min_pop, min_area).map { |article_title|
-        latlon = points.delete(article_title)
-        next unless latlon
+%w(en fr es ja).each do |language|
+    puts "FETCHING DBPEDIA DUMP"
+    points = download_archive(language)
+    puts "QUERYING SPARQL ENDPOINT"
+    world, continent, state = [[600_000, 30_000 * 10*7],
+                               [50_000, 10_000 * 10**7],
+                               [1_000, 10**9]].map do |min_pop, min_area|
+        query(min_pop, min_area, language).map { |article_title|
+            latlon = points.delete(article_title)
+            next unless latlon
+            [latlon[0], latlon[1], article_title]
+        }.compact
+    end
+
+    county_or_city = points.map do |article_title, latlon|
         [latlon[0], latlon[1], article_title]
-    }.compact
+    end
+
+
+    client_data = {
+        format: 'compact',
+        layers: [world, continent, state, county_or_city],
+        layerMap: [
+            0, 0, 0, 0, 0, 0, #1-5
+            1, 1, 1,          #6-8
+            2, 2, 2,          #9-11
+            3, 3, 3, 3, 3, 3, 3, 3, 3  #12-19
+        ]
+    }
+
+    puts "#{language}: #{world.length}\t#{continent.length}\t#{state.length}\t#{county_or_city.length}"
+    File.write("data/#{language}.json", client_data.to_json)
 end
-
-county_or_city = points.map do |article_title, latlon|
-    [latlon[0], latlon[1], article_title]
-end
-
-
-client_data = {
-    format: 'compact',
-    layers: [world, continent, state, county_or_city],
-    layerMap: [
-        0, 0, 0, 0, 0, 0, #1-5
-        1, 1, 1,          #6-8
-        2, 2, 2,          #9-11
-        3, 3, 3, 3, 3, 3, 3, 3, 3  #12-19
-    ]
-}
-
-puts "English: #{world.length}\t#{continent.length}\t#{state.length}\t#{county_or_city.length}"
-
-File.write('data/en.json', client_data.to_json)
