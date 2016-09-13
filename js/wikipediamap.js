@@ -86,7 +86,7 @@ map.on('moveend', function() {
 //#WIKIPEDIA
 function wikimediaAPI(data, callback) {
     $.ajax({
-        url: 'http://' + urlParameters.language + '.wikipedia.org/w/api.php',
+        url: '//' + urlParameters.language + '.wikipedia.org/w/api.php',
         dataType: "jsonp",
         data: data,
         success: callback
@@ -130,7 +130,7 @@ $('#content-wrapper').on('click', 'a:not([href^="#"]), area', function(event) {
         loadArticle(articleName);
     else {
         var href = $(this).attr('href');
-        if(href.slice(0, 3) != 'http') href = 'http://wikipedia.org' + href;
+        if(href.slice(0, 3) != 'http') href = '//wikipedia.org' + href;
         window.open(href);
     }
 });
