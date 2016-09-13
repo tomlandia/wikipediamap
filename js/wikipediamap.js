@@ -37,9 +37,9 @@ var RTreeMarkerLayer = L.LayerGroup.extend({
 var map = L.map('map', {minZoom: 3, zoom: 13, center: [48.8566, 2.3509], zoomControl: false});
 new L.Control.Zoom({ position: 'topright' }).addTo(map);
 
-L.tileLayer('http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', { //https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
-    attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
-    subdomains: ['otile1','otile2','otile3','otile4']
+L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors',
+    subdomains: ['a','b','c']
 }).addTo(map);
 
 var urlParameters = {};
